@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Chart.js example</title>
+    <style>#graph {
+  width: 800px;
+  margin: auto;
+  padding-right: 4cm;
+  display: block;
+}
+
+#container1, #container2, #container3 {
+  text-align: center;
+  margin: 1rem;
+  padding: 2rem;
+}
+
+#energy_box {
+  vertical-align: middle;
+  background-color: #f0ead6;
+  border-radius: 30px;
+  width: 40%;
+  margin: 10px;
+  padding: 1rem;
+  display: inline-block;
+  box-shadow: 0 30px 40px #00000080;
+}
+
+</style>
+  </head>
+  <body>
+    <p><center>it has been</center></p>
+    <h1><center><span id="minute2"></span><span id="minute1"></span>:<span id="seconds2"></span><span id="seconds1"></span></center></h1>
+    <p><center>since you clicked on this website. This is the amount of energy bitcoin has spent</center></p>
+    <!-- <div style="width: 500px;"><canvas id="dimensions"></canvas></div><br/> -->
+    <div id="graph"><canvas id="acquisitions"></canvas></div>
+    <div id="container1">
+    <div id="energy_box">
+      <h2><center>How is Bitcoin using this much energy?</center></h2>
+      <p>
+        Bitcoin's philosophy is based on a financial 
+        system without trust, and a key aspect of the online currency is in using the computational power of many computers to 
+        guarentee safety from a malicious actor attempting to insert false transactions into
+        the digital leger which keeps track of all transactions, (the blockchain). To work around the problem Bitcoin attaches a 
+        very long number to each section of memory, and computers use this number to solve a mathematical problem, whos solution scales with
+        the individual computing power spent on the problem, such that every 10 minutes it is able to be solved.
+        To prevent someone with a sufficiently large computer taking over the whole
+        system. This is where most of bitcoins' energy use comes from, as with millions of computers working on the same mathematical problem,
+        the problem scales to require those millions of computers to run at full capacity to solve it in 10 minutes. Once a single computer finds the hash,
+        the millions of other computers that did not throw away the work they had just done, essentially wasting that power.
+      </p>
+    </div>
+    <div id="energy_box">
+      <h2><center>What is the math problem miners are trying to solve?</center></h2>
+      <p>
+      Miners have access to the data that makes up the newest block of memory, and this combined with 
+      a random number is put through an encryption algorithm SHA-256, that can turn any data into a 256 bit number.
+      The miners are looking for the number that when run through the algorithm with the block data, produces a value with
+      an amount of zeros at the end, with this number of zeros being determined by how much computing power is currently being
+      used to solve the problem. SHA-256 is designed to be unreversable and so the best method miners have is guessing numbers
+      until someone finds a solution. Keep trying numbers until your hash ends in a zero, (each number has a different hash). This is the computation 
+      bitcoin miners are doing and spending the energy on. Looking for hashes with some amount of zeros at the end based on total
+      computing power being spent on the problem.
+      </p><p> input a number:<input type="text" id="appendval" placeholder="Enter Number"></p>
+      <input type="button" id="btn1" value="hash">
+      <p>your new hexadecimal number is <span id="shash"></span></p>
+      <p></p>
+
+    </div>
+  </div>
+  <div id="container2">
+      <div id="energy_box">
+        <h2><center>Mining Bitcoin has costed our future selves <span id="deficit"></span>$</center></h2>
+      <p>Using conservative estimates on the cost to humans and the climate on burning one tonne of coal, and 
+        taking into account around 25% of bitcoin mining is done with renewable energy, and subtracting the value of the bitcoin created from the cost,
+        we can see that it generates a large net deficit to our society. While bitcoin is accepted as currency at some major companies, is the good it
+        provides as a currency outweight the massive externalities it creates? This cost will only increase as every 4 years, the bitcoin reward for solving
+        the mathematical problem (currently at 6.25 bitcoin), halves. 
+      </p>
+      </div>
+      <div id="energy_box">
+      <h2><center>Can Bitcoin replace physical currency?</center></h2>
+      <p>Since the Bitcoin system creates new memory for transactions every 10 minutes, this provides a hard 
+        limit for how many transactions can possibly occur and be stored. Bitcoin can handle 7 transactions per second in a best case scenario, this works 
+        out as 220 million transactions every year at an absolute maximum. We would have to rethink how we transacted online currency as Visa, one of
+        the major handlers of online tranactions, processed over "200 Billion" transactions in 2022. The system put in place to guarentee complete trust
+        has bottlenecked Bitcoins viability as anything more than a system for cryptocurrency enthusiasts.
+      </p>
+    </div>
+  </div>
+  <div id="container3">
+    <div id="energy_box">
+      <h2><center>Bitcoin has consumed the equivalent of <span id="oilbarr"></span> barrels of oil</center></h2>
+      <p>Bitcoin's imact on our environment cannot be understated, as it currently uses 0.55% of the worlds total energy production. 
+        But even if Bitcoin was created using 100% renewable energy, the technology that dedicated bitcoin miners use is tailor made to 
+        solve the kind of problem posed by the Bitcoin network. Once newer and better hardware is created, this technology cannot be recycled
+        and ends up being thrown out, creating an e-waste footprint larger than Switzerland's. 
+      </p>
+    </div>
+  </div>
+    <!-- <script type="module" src="dimensions.js"></script> -->
+    <script src="/index.a521242b.js" defer=""></script>
+  </body>
+</html>
