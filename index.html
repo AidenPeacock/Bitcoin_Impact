@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Chart.js example</title>
+    <style>
+      #graph{
+        padding-right: 4cm;
+        margin: auto;
+        display: block;
+        width: 800px;
+      
+}
+      #container1, #container2, #container3 {
+        /*border: 1px solid black;*/
+        margin: 1rem;
+        padding: 2rem 2rem;
+        text-align: center;
+}
+      #energy_box{
+        display: inline-block;
+        width: 40%;
+        padding: 1rem 1rem;
+        margin: 10px;
+        vertical-align: middle;
+        background-color: #F0EAD6;
+        border-radius: 30px;
+        box-shadow: 0 30px 40px rgba(0, 0, 0, 0.5);
+
+      }
+
+    </style>
+  </head>
+  <body>
+    <p><center>it has been</center></p>
+    <h1><center><span id="minute2"></span><span id="minute1"></span>:<span id="seconds2"></span><span id="seconds1"></span></center></h1>
+    <p><center>since you clicked on this website. This is the amount of energy bitcoin has spent</center></p>
+    <!-- <div style="width: 500px;"><canvas id="dimensions"></canvas></div><br/> -->
+    <div id="graph"><canvas id="acquisitions"></canvas></div>
+    <div id="container1">
+    <div id="energy_box">
+      <h2><center>How is Bitcoin using this much energy?</center></h2>
+      <p>
+        Bitcoin's philosophy is based on a financial 
+        system without trust, and a key aspect of the online currency is in using the computational power of many computers to 
+        guarentee safety from a malicious actor attempting to insert false transactions into
+        the digital leger which keeps track of all transactions, (the blockchain). To work around the problem Bitcoin attaches a 
+        very long number to each section of memory, and computers use this number to solve a mathematical problem, whos solution scales with
+        the individual computing power spent on the problem, such that every 10 minutes it is able to be solved.
+        To prevent someone with a sufficiently large computer taking over the whole
+        system. This is where most of bitcoins' energy use comes from, as with millions of computers working on the same mathematical problem,
+        the problem scales to require those millions of computers to run at full capacity to solve it in 10 minutes. Once a single computer finds the hash,
+        the millions of other computers that did not throw away the work they had just done, essentially wasting that power.
+      </p>
+    </div>
+    <div id="energy_box">
+      <h2><center>What is the math problem miners are trying to solve?</center></h2>
+      <p>
+      Miners have access to the data that makes up the newest block of memory, and this combined with 
+      a random number is put through an encryption algorithm SHA-256, that can turn any data into a 256 bit number.
+      The miners are looking for the number that when run through the algorithm with the block data, produces a value with
+      an amount of zeros at the end, with this number of zeros being determined by how much computing power is currently being
+      used to solve the problem. SHA-256 is designed to be unreversable and so the best method miners have is guessing numbers
+      until someone finds a solution. Keep trying numbers until your hash ends in a zero, (each number has a different hash). This is the computation 
+      bitcoin miners are doing and spending the energy on. Looking for hashes with some amount of zeros at the end based on total
+      computing power being spent on the problem.
+      <p> input a number:<input type="text" id="appendval" placeholder="Enter Number"></p>
+      <input type="button" id="btn1" value="hash">
+      <p>your new hexadecimal number is <span id="shash"></span></p>
+      </p>
+
+    </div>
+  </div>
+  <div id="container2">
+      <div id="energy_box">
+        <h2><center>Mining Bitcoin has costed our future selves <span id="deficit"></span>$</center></h2>
+      <p>Using conservative estimates on the cost to humans and the climate on burning one tonne of coal, and 
+        taking into account around 25% of bitcoin mining is done with renewable energy, and subtracting the value of the bitcoin created from the cost,
+        we can see that it generates a large net deficit to our society. While bitcoin is accepted as currency at some major companies, is the good it
+        provides as a currency outweight the massive externalities it creates? This cost will only increase as every 4 years, the bitcoin reward for solving
+        the mathematical problem (currently at 6.25 bitcoin), halves. 
+      </p>
+      </div>
+      <div id="energy_box">
+      <h2><center>Can Bitcoin replace physical currency?</center></h2>
+      <p>Since the Bitcoin system creates new memory for transactions every 10 minutes, this provides a hard 
+        limit for how many transactions can possibly occur and be stored. Bitcoin can handle 7 transactions per second in a best case scenario, this works 
+        out as 220 million transactions every year at an absolute maximum. We would have to rethink how we transacted online currency as Visa, one of
+        the major handlers of online tranactions, processed over "200 Billion" transactions in 2022. The system put in place to guarentee complete trust
+        has bottlenecked Bitcoins viability as anything more than a system for cryptocurrency enthusiasts.
+      </p>
+    </div>
+  </div>
+  <div id="container3">
+    <div id="energy_box">
+      <h2><center>You need electricity cheaper than <span id="costperkWh"></span> cents per kWh to make profit</center></h2>
+      <p>newparagraph
+      </p>
+    </div>
+    <div id="energy_box">
+      <h2><center>newheader</center></h2>
+      <p>Bitcoin's imact on our environment cannot be understated, as it currently uses 0.55% of the worlds total energy production. 
+        But even if Bitcoin was created using 100% renewable energy, the technology that dedicated bitcoin miners use is tailor made to 
+        solve the kind of problem posed by the Bitcoin network. Once newer and better hardware is created, this technology cannot be recycled
+        and ends up being thrown out, creating an e-waste footprint larger than Switzerland's. 
+      </p>
+  </div>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const socket = io();
+  var costperkWh = 0
+  
+  socket.on('bitcoin', (price) => {
+    costperkWh = price
+    document.getElementById("costperkWh").innerHTML = costperkWh
+  })
+  async function sha256(message) {
+  // encode as UTF-8
+  const msgBuffer = new TextEncoder().encode(message);                    
+
+  // hash the message
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+  // convert ArrayBuffer to Array
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+  // convert bytes to hex string                  
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+  }
+  let appendval = 0
+  let shaval = 0
+  let btn1 = document.getElementById("btn1")
+
+  function hash(){
+  appendval = document.getElementById("appendval").value
+  shaval = sha256(appendval)
+  shaval.then(function(result) {
+    document.getElementById("shash").innerHTML = result
+    })
+  }
+
+  btn1.addEventListener('click', hash)
+  let value = 0;
+  let second1 = 0;
+  let second2 = 0;
+  let minute1 = 0;
+  let minute2 = 0;
+  setInterval(timer, 1000);
+  function timer(){
+    second1+=1;
+    if (second1 == 10){
+      second2 +=1;
+      second1 = 0;
+    }
+    if (second2 == 6){
+      minute1 +=1;
+      second2 = 0;
+    }
+    if (minute1 == 10){
+      minute2 +=1;
+      minute1 = 0;
+    }
+    document.getElementById("minute1").innerHTML = minute1;
+    document.getElementById("minute2").innerHTML = minute2;
+    document.getElementById("seconds1").innerHTML = second1;
+    document.getElementById("seconds2").innerHTML = second2;
+    // kWh per second bitcoin uses
+    value += (4027)
+    if (value > numstorage.slice(-1) && numstorage.length != 0){
+          let x = numstorage.pop();
+          let y = labelstorage.pop();
+          myChart.data.datasets[0].data.splice(0, 1);
+          myChart.data.datasets[0].data.splice(3, 0, x);
+          myChart.data.labels.splice(0, 1);
+          myChart.data.labels.splice(3, 0, y);
+      }
+      myChart.data.datasets[0].data[4] = value;
+      myChart.update();
+  }
+var myChart = new Chart(
+    document.getElementById('acquisitions'),
+    {
+      type: 'bar',
+      options: {
+        responsive: true,
+        scales:{
+          x:{
+            grid:{
+              drawOnChartArea: false
+            }
+          }
+        },
+        animation: true,
+        plugins: {
+          legend: {
+            display: true
+          },
+          tooltip: {
+            enabled: false
+          }
+        }
+      },
+      data: {
+        labels: ["Average Canadian household per month", "Driving 100,000km (24.2 gas mileage)", "10,000,000 visa transactions", 
+        "All ATM's in the world per day", "Bitcoin"],
+        datasets: [
+          {
+            label: 'Kilowatt hours',
+            data: [1200, 7700, 15000, 20000, value],
+            backgroundColor: 'rgb(255, 99, 132)'
+
+          }
+        ]
+      }
+    }
+  );
+let numstorage = [1000000, 400000, 200000, 75000, 50000];
+let labelstorage = ["average US citizens energy use during their life", "energy output of a coal power plant for 1 hour", "Netherlands energy useage per minute", "Burning 30 tonnes of coal", "Creation of 250 solar panels"];
+
+</script>
+
+
+</html>
+
