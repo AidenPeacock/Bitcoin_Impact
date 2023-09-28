@@ -72,10 +72,10 @@
   </div>
   <div id="container2">
       <div id="energy_box">
-        <h2><center>Mining Bitcoin has costed our future selves <span id="deficit"></span>$</center></h2>
-      <p>Using conservative estimates on the cost to humans and the climate on burning one tonne of coal, and 
-        taking into account around 25% of bitcoin mining is done with renewable energy, and subtracting the value of the bitcoin created from the cost,
-        we can see that it generates a large net deficit to our society. While bitcoin is accepted as currency at some major companies, is the good it
+        <h2><center>Each new bitcoin mined costs our future selves <span id="deficit"></span>$</center></h2>
+      <p>This number was calculated using a Harvard studies estimates on the cost to humans and the climate on burning adding an additional metric ton of CO2 into our atmosphere, 
+        and White House data on the estimate amount of CO2 emissions bitcoin creates. This estimate subtracts the current price of a bitcoin from
+        the environmental and societal externalities created from mining a single bitcoin. While bitcoin is accepted as currency at some major companies, does the good it
         provides as a currency outweight the massive externalities it creates? This cost will only increase as every 4 years, the bitcoin reward for solving
         the mathematical problem (currently at 6.25 bitcoin), halves. 
       </p>
@@ -85,7 +85,7 @@
       <p>Since the Bitcoin system creates new memory for transactions every 10 minutes, this provides a hard 
         limit for how many transactions can possibly occur and be stored. Bitcoin can handle 7 transactions per second in a best case scenario, this works 
         out as 220 million transactions every year at an absolute maximum. We would have to rethink how we transacted online currency as Visa, one of
-        the major handlers of online tranactions, processed over "200 Billion" transactions in 2022. The system put in place to guarentee complete trust
+        the major handlers of online tranactions, processed over <b>200 Billion</b> transactions in 2022. The system put in place to guarentee complete trust
         has bottlenecked Bitcoins viability as anything more than a system for cryptocurrency enthusiasts.
       </p>
     </div>
@@ -96,8 +96,7 @@
       <p>This calculation is based on the current bitcoin mining hardware of choice, the Anteater 19, and ignoring the cost to buy the hardware.
         With the assumption of costs at 6 cents/kWh, it will take 22 months to break even if you run the machine 24/7. This is assuming you join a mining
         pool, where many computers attempt to calculate the correct hash and split the rewards once they find one. Bitcoin mining is not a feasible 
-        investment for most of the population, as the power costs to simply break even are quite rare to find in most places, let alone the cost suggested
-        by bitcoin miners as a reasonable value. The system congregates wealth in the hands of those with money and access to the cheapest electricity, and if 
+        investment for most of the population, as the power costs to simply break even are quite rare to find in most places. The system congregates wealth in the hands of those with money and access to the cheapest electricity, and if 
         adopted widely, would create massive inequality between those who can and cannot efficiently mine the currency. This problem also worsens once 
         the amount of bitcoin given every 10 minutes halves in 2024.
       </p>
@@ -116,10 +115,20 @@
 <script>
   const socket = io();
   var costperkWh = 0
-  
+  var secondcostincr = 0
   socket.on('bitcoin', (price) => {
     costperkWh = price
     document.getElementById("costperkWh").innerHTML = costperkWh
+  })
+  socket.on('blockhash', (hash) => {
+    blockhash = hash
+  })
+  socket.on('bitcoinprice', (price1) => {
+    // cryptocurrencies emit 140 million tonnes of CO2 per year, bitcoin emits 60% of this, a tonne of CO2 incurs 182$ of 
+    // environmental and societal damage, multiplied by USD to CAD conversion factor
+    // this value represents the net deficit every bitcoin mined creates
+    let costperbit = (140000000*0.6*182*1.35)/(365*24*6) - (price1*6.25)
+    document.getElementById("deficit").innerHTML = costperbit.toFixed(0)
   })
   async function sha256(message) {
   // encode as UTF-8
@@ -137,16 +146,16 @@
   }
   let appendval = 0
   let shaval = 0
+  blockhash = ""
   let btn1 = document.getElementById("btn1")
 
   function hash(){
   appendval = document.getElementById("appendval").value
-  shaval = sha256(appendval)
+  shaval = sha256(appendval+blockhash)
   shaval.then(function(result) {
     document.getElementById("shash").innerHTML = result
     })
   }
-
   btn1.addEventListener('click', hash)
   let value = 0;
   let second1 = 0;
@@ -229,6 +238,8 @@ let labelstorage = ["average US citizens energy use during their life", "energy 
 
 
 </html>
+
+
 
 
 
